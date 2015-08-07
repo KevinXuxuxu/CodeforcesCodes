@@ -15,12 +15,12 @@ struct req{
 int a[72];
 int flag[36];
 int n,m;
-int js;
+long long js;
 //stack<int*> sta;
 vector<int> rreqs[36];
 
 bool check(struct req r){
-    int i = r.i-1, j = r.j-1;
+    int i = r.i, j = r.j;
     if(!strcmp(r.op, "="))
         return a[i]==a[j];
     else if(!strcmp(r.op, ">"))
@@ -37,15 +37,6 @@ void ite(int x);
 void assign(int x, int p){
     a[x] = p;
     
-    if(x == 2*n-1){
-//        for(int i=0;i<2*n;i++)
-//            cout<<a[i]<<' ';
-//        cout<<endl;
-        js++;
-        return;
-    }
-    
-    
     bool f = true;
     for(int j=0; j<rreqs[x].size(); j++){
         if(!check(reqs[rreqs[x][j]])){
@@ -55,7 +46,10 @@ void assign(int x, int p){
     }
     if(f){
         flag[p]++;
-        ite(x+1);
+        if(x == 2*n)
+            js++;
+        else
+            ite(x+1);
         flag[p]--;
     }
 }
@@ -99,13 +93,13 @@ int main() {
     cin>>n>>m;
     for (int i=0; i<m; i++) {
         cin>>reqs[i].i>>reqs[i].op>>reqs[i].j;
-        int max = reqs[i].j > reqs[i].i ? max = reqs[i].j : reqs[i].i;
+        int max = reqs[i].j > reqs[i].i ? reqs[i].j : reqs[i].i;
         rreqs[max].push_back(i);
     }
     memset(a, 0, sizeof(a));
     memset(flag, 0, sizeof(flag));
     js = 0;
-    ite(0);
+    ite(1);
     cout<<js<<endl;
     return 0;
 }
